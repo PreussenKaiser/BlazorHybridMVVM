@@ -1,0 +1,51 @@
+﻿@page "/fetchdata"
+
+@inject FetchDataViewModel ViewModel
+
+<h1>
+	@this.ViewModel.Title
+</h1>
+
+<p>
+	This component demonstrates fetching data from a service.
+</p>
+
+@if (!this.ViewModel.Forecasts.Any())
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Temp. (C)</th>
+				<th>Temp. (F)</th>
+				<th>Summary</th>
+			</tr>
+		</thead>
+		<tbody>
+			<Binder BindingContext="this.ViewModel">
+				@foreach (var f in this.ViewModel.Forecasts)
+				{
+					<tr>
+						<td>@f.Date.ToShortDateString()</td>
+						<td>@f.TemperatureC</td>
+						<td>@f.TemperatureF</td>
+						<td>@f.Summary</td>
+					</tr>
+				}
+			</Binder>
+		</tbody>
+	</table>
+}
+
+@code
+{
+	/// <summary>
+	/// Initialized the weather.
+	/// </summary>
+	protected override void OnInitialized()
+			=> this.ViewModel.GetForecastCommand.Execute(null);
+}
